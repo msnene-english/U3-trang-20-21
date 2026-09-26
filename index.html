@@ -1,0 +1,1276 @@
+<!DOCTYPE html>
+    <html lang="vi">
+    <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>rU3 trang 20-21</title>
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; line-height: 1.6; color: #333; max-width: 800px; margin: 0 auto; padding: 20px; background-color: #f0f2f5; position: relative; z-index: 1; }
+        .watermark { position: absolute; top: 30px; left: 0; right: 0; text-align: center; font-size: 50px; color: rgba(0, 0, 0, 0.04); font-weight: bold; pointer-events: none; z-index: -1; user-select: none; }
+        .watermark div { transform: rotate(-30deg); margin: 200px 0; }
+        h1, h2 { color: #2c3e50; text-align: center; }
+        .screen { display: none; background: #fff; padding: 30px; border-radius: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
+        .screen.active { display: block; }
+        
+        input[type="text"] { width: 100%; padding: 12px; margin: 10px 0 20px; border: 2px solid #ddd; border-radius: 6px; box-sizing: border-box; font-size: 16px; transition: border-color 0.3s; }
+        input[type="text"]:focus { border-color: #3498db; outline: none; }
+        
+        button { background: #3498db; color: #fff; border: none; padding: 12px 24px; font-size: 16px; border-radius: 6px; cursor: pointer; transition: background 0.3s, transform 0.1s; }
+        button:hover { background: #2980b9; }
+        button:active { transform: scale(0.98); }
+        button:disabled { background: #95a5a6; cursor: not-allowed; }
+        
+        .question-block { margin-bottom: 25px; padding: 15px; background: #f9f9f9; border-left: 4px solid #3498db; border-radius: 0 8px 8px 0; }
+        .instruction-box { margin-bottom: 15px; padding: 10px 15px; background: #e8f4fd; border: 1px solid #b6d4fe; border-radius: 6px; font-weight: bold; color: #004085; }
+        .question-text { font-weight: 500; margin-bottom: 15px; font-size: 16px; line-height: 1.8; }
+        
+        .options { display: flex; flex-direction: column; gap: 10px; margin-top: 10px; }
+        .option { padding: 12px 15px; background: #fff; border: 2px solid #eee; border-radius: 8px; cursor: pointer; transition: all 0.2s; display: flex; align-items: center; gap: 10px; }
+        .option:hover { border-color: #3498db; background: #f8faff; }
+        .option.selected { border-color: #3498db; background: #ebf5ff; }
+        .option.correct-opt { border-color: #2ecc71; background: #eafaf1; }
+        .option.wrong-opt { border-color: #e74c3c; background: #fdedec; }
+        
+        .radio-circle { width: 20px; height: 20px; border: 2px solid #ddd; border-radius: 50%; position: relative; }
+        .option.selected .radio-circle::after { content: ''; position: absolute; top: 4px; left: 4px; width: 12px; height: 12px; background: #3498db; border-radius: 50%; }
+        
+        .gap-fill-input { width: 120px !important; padding: 4px 8px !important; margin: 0 5px !important; display: inline-block !important; border: 1px solid #ccc !important; border-radius: 4px !important; font-size: 16px !important; }
+        
+        .reordering-container { display: flex; flex-direction: column; gap: 15px; }
+        .word-bank, .drop-zone { display: flex; flex-wrap: wrap; gap: 8px; min-height: 45px; padding: 10px; background: #fff; border: 2px dashed #ddd; border-radius: 8px; }
+        .word-chip { padding: 8px 16px; background: #3498db; color: #fff; border-radius: 20px; cursor: pointer; user-select: none; font-weight: 500; transition: transform 0.1s; }
+        .word-chip:active { transform: scale(0.95); }
+        .word-chip.correct { background: #2ecc71; }
+        .word-chip.wrong { background: #e74c3c; }
+        
+        .rewrite-input { width: 100%; height: 80px; padding: 12px; border: 2px solid #ddd; border-radius: 6px; resize: vertical; font-size: 16px; font-family: inherit; }
+        
+        .check-btn { margin-top: 15px; background: #3498db; font-size: 14px; padding: 8px 16px; }
+        .explanation { display: none; margin-top: 15px; padding: 15px; background: #eef2f5; border-radius: 6px; font-size: 14.5px; line-height: 1.5; color: #2c3e50; border-left: 4px solid #2ecc71; }
+        
+        .progress-bar { width: 100%; height: 10px; background: #ddd; border-radius: 5px; margin-bottom: 20px; overflow: hidden; }
+        .progress-fill { height: 100%; background: #2ecc71; width: 0%; transition: width 0.3s; }
+        
+        .result-details { margin-top: 20px; padding: 15px; padding-bottom: 30px; background: #f8f9fa; border-radius: 6px; text-align: left; max-height: 60vh; overflow-y: auto; font-size: 14px; }
+        .error-item { margin-bottom: 10px; padding-bottom: 10px; border-bottom: 1px solid #eee; color: #e74c3c; }
+    </style>
+    </head>
+    <body>
+    <div class="watermark">
+        <div>rU3 trang 20-21<br>GV biên soạn: Ms Chí Nên - 0852639652</div>
+        <div>rU3 trang 20-21<br>GV biên soạn: Ms Chí Nên - 0852639652</div>
+        <div>rU3 trang 20-21<br>GV biên soạn: Ms Chí Nên - 0852639652</div>
+        <div>rU3 trang 20-21<br>GV biên soạn: Ms Chí Nên - 0852639652</div>
+    </div>
+    
+    <div id="startScreen" class="screen active">
+        <h1>rU3 trang 20-21</h1>
+        <p style="text-align: center; color: #7f8c8d;">Nhập họ và tên của bạn để bắt đầu làm bài</p>
+        <input type="text" id="studentName" placeholder="Ví dụ: Nguyễn Văn A" autocomplete="off">
+        <div style="text-align: center;">
+            <button onclick="startTest()">Bắt đầu làm bài</button>
+        </div>
+    </div>
+    
+    <div id="testScreen" class="screen">
+        <h2>rU3 trang 20-21</h2>
+        <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+        <div id="questionsContainer"></div>
+        <div style="text-align: center; margin-top: 30px;">
+            <button id="submitBtn" onclick="confirmSubmit()" style="background: #2ecc71; font-weight: bold; padding: 15px 40px;">NỘP BÀI</button>
+        </div>
+    </div>
+    
+    <div id="resultScreen" class="screen" style="text-align: center;">
+        <h1 style="color: #2ecc71; font-size: 36px;">Hoàn thành!</h1>
+        <h2 id="scoreDisplay" style="font-size: 48px; margin: 20px 0; color: #2c3e50;"></h2>
+        <p id="feedbackText" style="font-size: 18px; color: #7f8c8d;"></p>
+        <div class="result-details" id="resultDetails"></div>
+    </div>
+    
+    <div style="text-align: center; margin-top: 50px; padding: 20px; color: #7f8c8d; font-size: 14px; border-top: 1px solid #ddd;">
+        GV biên soạn: Ms Chí Nên - 0852639652
+    </div>
+    
+    <script>
+        const testName = 'rU3 trang 20-21';
+        const quizData = [
+  {
+    "type": "gap_fill_text",
+    "questionHTML": "1 I {{blank:b1}} / was seeing Maria for the first time at Ray's birthday party.",
+    "explanationHTML": "Dùng thì Quá khứ đơn (saw) vì đây là một sự việc đã xảy ra và kết thúc trong quá khứ, không phải là một hành động đang diễn ra (was seeing).",
+    "blanks": [
+      {
+        "blankId": "b1",
+        "correctAnswers": [
+          "saw"
+        ]
+      }
+    ]
+  },
+  {
+    "type": "gap_fill_text",
+    "questionHTML": "2 Richard watched / {{blank:b1}} TV when the phone rang.",
+    "explanationHTML": "Dùng thì Quá khứ tiếp diễn (was watching) cho hành động đang diễn ra trong quá khứ thì có hành động khác xen vào (the phone rang - Quá khứ đơn).",
+    "blanks": [
+      {
+        "blankId": "b1",
+        "correctAnswers": [
+          "was watching"
+        ]
+      }
+    ]
+  },
+  {
+    "type": "gap_fill_text",
+    "questionHTML": "3 When we were on holiday, we {{blank:b1}} / were going to the café almost every day.",
+    "explanationHTML": "Dùng thì Quá khứ đơn (went) để diễn tả một thói quen trong quá khứ (almost every day).",
+    "blanks": [
+      {
+        "blankId": "b1",
+        "correctAnswers": [
+          "went"
+        ]
+      }
+    ]
+  },
+  {
+    "type": "gap_fill_text",
+    "questionHTML": "4 Denise {{blank:b1}} / was practising the song every day until she could sing it perfectly.",
+    "explanationHTML": "Dùng thì Quá khứ đơn (practised) cho một hành động lặp đi lặp lại như thói quen trong quá khứ.",
+    "blanks": [
+      {
+        "blankId": "b1",
+        "correctAnswers": [
+          "practised"
+        ]
+      }
+    ]
+  },
+  {
+    "type": "gap_fill_text",
+    "questionHTML": "5 The phone was engaged when I called. Who did you talk / {{blank:b1}} to?",
+    "explanationHTML": "Dùng thì Quá khứ tiếp diễn (were you talking) để hỏi về hành động đang diễn ra tại một thời điểm xác định trong quá khứ.",
+    "blanks": [
+      {
+        "blankId": "b1",
+        "correctAnswers": [
+          "were you talking"
+        ]
+      }
+    ]
+  },
+  {
+    "type": "gap_fill_text",
+    "questionHTML": "6 Mr Connors {{blank:b1}} / was owning two houses and a villa in the south of France.",
+    "explanationHTML": "Dùng thì Quá khứ đơn (owned) vì 'own' là động từ chỉ trạng thái (stative verb), không dùng ở thì tiếp diễn.",
+    "blanks": [
+      {
+        "blankId": "b1",
+        "correctAnswers": [
+          "owned"
+        ]
+      }
+    ]
+  },
+  {
+    "type": "gap_fill_text",
+    "questionHTML": "7 I {{blank:b1}} / was doing my homework as soon as I got home from school.",
+    "explanationHTML": "Dùng thì Quá khứ đơn (did) cho các hành động xảy ra liên tiếp nhau trong quá khứ.",
+    "blanks": [
+      {
+        "blankId": "b1",
+        "correctAnswers": [
+          "did"
+        ]
+      }
+    ]
+  },
+  {
+    "type": "gap_fill_text",
+    "questionHTML": "8 A car came round the corner and I {{blank:b1}} / was jumping out of the way.",
+    "explanationHTML": "Dùng thì Quá khứ đơn (jumped) cho các hành động xảy ra nhanh và liên tiếp nhau trong quá khứ.",
+    "blanks": [
+      {
+        "blankId": "b1",
+        "correctAnswers": [
+          "jumped"
+        ]
+      }
+    ]
+  },
+  {
+    "type": "gap_fill_text",
+    "questionHTML": "9 When my dad met my mum, he worked / {{blank:b1}} as a bus driver.",
+    "explanationHTML": "Dùng thì Quá khứ tiếp diễn (was working) để làm nền cho một câu chuyện hoặc diễn tả một hành động đang diễn ra thì hành động khác (met) xen vào.",
+    "blanks": [
+      {
+        "blankId": "b1",
+        "correctAnswers": [
+          "was working"
+        ]
+      }
+    ]
+  },
+  {
+    "type": "gap_fill_text",
+    "questionHTML": "10 I {{blank:b1}} / was getting up at six o'clock every morning last week!",
+    "explanationHTML": "Dùng thì Quá khứ đơn (got) để diễn tả một thói quen hoặc hành động lặp lại trong quá khứ (every morning last week).",
+    "blanks": [
+      {
+        "blankId": "b1",
+        "correctAnswers": [
+          "got"
+        ]
+      }
+    ]
+  },
+  {
+    "type": "gap_fill_text",
+    "questionHTML": "11 My cousin and I played / {{blank:b1}} on the computer when there was a power cut.",
+    "explanationHTML": "Dùng thì Quá khứ tiếp diễn (were playing) cho hành động đang diễn ra thì bị xen vào bởi một hành động khác (there was a power cut).",
+    "blanks": [
+      {
+        "blankId": "b1",
+        "correctAnswers": [
+          "were playing"
+        ]
+      }
+    ]
+  },
+  {
+    "type": "gap_fill_text",
+    "questionHTML": "12 No, that's not right. I {{blank:b1}} / was passing the test. I got a B.",
+    "explanationHTML": "Dùng thì Quá khứ đơn (did pass) với trợ động từ 'did' để nhấn mạnh sự việc đã xảy ra.",
+    "blanks": [
+      {
+        "blankId": "b1",
+        "correctAnswers": [
+          "did pass"
+        ]
+      }
+    ]
+  },
+  {
+    "type": "gap_fill_text",
+    "questionHTML": "1 Where {{blank:b1}} (you / go) when I saw you on the bus last night?",
+    "explanationHTML": "Quá khứ tiếp diễn (were you going) do đang diễn tả hành động đang xảy ra khi có hành động khác xen vào (saw).",
+    "blanks": [
+      {
+        "blankId": "b1",
+        "correctAnswers": [
+          "were you going"
+        ]
+      }
+    ]
+  },
+  {
+    "type": "gap_fill_text",
+    "questionHTML": "2 {{blank:b1}} (you / enjoy) the film?",
+    "explanationHTML": "Quá khứ đơn (Did you enjoy) vì đây là câu hỏi về một trải nghiệm đã hoàn tất trong quá khứ.",
+    "blanks": [
+      {
+        "blankId": "b1",
+        "correctAnswers": [
+          "Did you enjoy"
+        ]
+      }
+    ]
+  },
+  {
+    "type": "gap_fill_text",
+    "questionHTML": "3 When we shared a room, Zoë {{blank:b1}} (always / take) my things. It was so annoying!",
+    "explanationHTML": "Quá khứ tiếp diễn đi kèm với 'always' để diễn tả sự phàn nàn về một thói quen gây bực mình trong quá khứ.",
+    "blanks": [
+      {
+        "blankId": "b1",
+        "correctAnswers": [
+          "was always taking"
+        ]
+      }
+    ]
+  },
+  {
+    "type": "gap_fill_text",
+    "questionHTML": "4 When I went to get the tickets, I realised I {{blank:b1}} (not / have) any money.",
+    "explanationHTML": "Quá khứ đơn (didn't have) vì 'have' mang nghĩa sở hữu là động từ trạng thái, không dùng ở thì tiếp diễn.",
+    "blanks": [
+      {
+        "blankId": "b1",
+        "correctAnswers": [
+          "didn't have"
+        ]
+      }
+    ]
+  },
+  {
+    "type": "gap_fill_text",
+    "questionHTML": "5 When I was young, we {{blank:b1}} (go) to France every year on holiday.",
+    "explanationHTML": "Quá khứ đơn (went) diễn tả thói quen trong quá khứ (every year).",
+    "blanks": [
+      {
+        "blankId": "b1",
+        "correctAnswers": [
+          "went"
+        ]
+      }
+    ]
+  },
+  {
+    "type": "gap_fill_text",
+    "questionHTML": "6 Elvis {{blank:b1}} (become) famous for the song Blue Suede Shoes.",
+    "explanationHTML": "Quá khứ đơn (became) diễn tả sự kiện đã xảy ra và kết thúc trong quá khứ.",
+    "blanks": [
+      {
+        "blankId": "b1",
+        "correctAnswers": [
+          "became"
+        ]
+      }
+    ]
+  },
+  {
+    "type": "gap_fill_text",
+    "questionHTML": "7 When you rang last night, I {{blank:b1}} (work) in the garden so I didn't hear the phone.",
+    "explanationHTML": "Quá khứ tiếp diễn (was working) diễn tả hành động đang diễn ra tại một thời điểm trong quá khứ (lúc bạn gọi).",
+    "blanks": [
+      {
+        "blankId": "b1",
+        "correctAnswers": [
+          "was working"
+        ]
+      }
+    ]
+  },
+  {
+    "type": "gap_fill_text",
+    "questionHTML": "8 I {{blank:b1}} (hear) from Davina last night. She says hello.",
+    "explanationHTML": "Quá khứ đơn (heard) do sự việc xảy ra ở một thời điểm xác định trong quá khứ (last night).",
+    "blanks": [
+      {
+        "blankId": "b1",
+        "correctAnswers": [
+          "heard"
+        ]
+      }
+    ]
+  },
+  {
+    "type": "gap_fill_text",
+    "questionHTML": "9 The old man {{blank:b1}} (appear) to be very tired and he slowly sat down.",
+    "explanationHTML": "Quá khứ đơn (appeared) vì 'appear' (có vẻ) là động từ trạng thái.",
+    "blanks": [
+      {
+        "blankId": "b1",
+        "correctAnswers": [
+          "appeared"
+        ]
+      }
+    ]
+  },
+  {
+    "type": "gap_fill_text",
+    "questionHTML": "10 We {{blank:b1}} (throw) a surprise party for my brother last Saturday.",
+    "explanationHTML": "Quá khứ đơn (threw) do sự việc đã kết thúc ở một thời điểm xác định trong quá khứ (last Saturday).",
+    "blanks": [
+      {
+        "blankId": "b1",
+        "correctAnswers": [
+          "threw"
+        ]
+      }
+    ]
+  },
+  {
+    "type": "gap_fill_text",
+    "questionHTML": "Dear Lisa,<br>Thanks for your letter. I (1) just left / {{blank:b1}} for school when I saw the postman and he (2) {{blank:b2}} / had given it to me. It was really funny!",
+    "explanationHTML": "(1) Quá khứ hoàn thành (had just left) vì hành động này xảy ra trước một hành động khác trong quá khứ (saw the postman). (2) Quá khứ đơn (gave) cho các hành động xảy ra nối tiếp nhau (saw... and gave).",
+    "blanks": [
+      {
+        "blankId": "b1",
+        "correctAnswers": [
+          "had just left"
+        ]
+      },
+      {
+        "blankId": "b2",
+        "correctAnswers": [
+          "gave"
+        ]
+      }
+    ]
+  },
+  {
+    "type": "gap_fill_text",
+    "questionHTML": "I (3) {{blank:b1}} / had read it during maths and it (4) {{blank:b2}} / had made me laugh. I almost (5) {{blank:b3}} / had got in trouble!",
+    "explanationHTML": "Tất cả dùng Quá khứ đơn (read, made, got) để kể lại một chuỗi sự kiện theo trình tự thời gian trong quá khứ.",
+    "blanks": [
+      {
+        "blankId": "b1",
+        "correctAnswers": [
+          "read"
+        ]
+      },
+      {
+        "blankId": "b2",
+        "correctAnswers": [
+          "made"
+        ]
+      },
+      {
+        "blankId": "b3",
+        "correctAnswers": [
+          "got"
+        ]
+      }
+    ]
+  },
+  {
+    "type": "gap_fill_text",
+    "questionHTML": "Anyway, I'm excited because I (6) {{blank:b1}} / had had my first judo lesson yesterday.",
+    "explanationHTML": "Quá khứ đơn (had) dùng với trạng từ 'yesterday' (hôm qua).",
+    "blanks": [
+      {
+        "blankId": "b1",
+        "correctAnswers": [
+          "had"
+        ]
+      }
+    ]
+  },
+  {
+    "type": "gap_fill_text",
+    "questionHTML": "I (7) {{blank:b1}} / had been late for the lesson because when I (8) {{blank:b2}} / had got there, I suddenly realised I (9) left / {{blank:b3}} my judo suit at home!",
+    "explanationHTML": "(7), (8) dùng Quá khứ đơn cho các sự việc trong câu chuyện. (9) dùng Quá khứ hoàn thành (had left) vì việc để quên áo xảy ra trước lúc đến nơi và nhận ra (realised).",
+    "blanks": [
+      {
+        "blankId": "b1",
+        "correctAnswers": [
+          "was"
+        ]
+      },
+      {
+        "blankId": "b2",
+        "correctAnswers": [
+          "got"
+        ]
+      },
+      {
+        "blankId": "b3",
+        "correctAnswers": [
+          "had left"
+        ]
+      }
+    ]
+  },
+  {
+    "type": "gap_fill_text",
+    "questionHTML": "So I (10) {{blank:b1}} / had gone all the way home and when I (11) {{blank:b2}} / had got back, the lesson (12) already began / {{blank:b3}}.",
+    "explanationHTML": "(10), (11) dùng Quá khứ đơn cho các hành động nối tiếp. (12) dùng Quá khứ hoàn thành (had already begun) vì bài học đã bắt đầu trước khi về đến nơi.",
+    "blanks": [
+      {
+        "blankId": "b1",
+        "correctAnswers": [
+          "went"
+        ]
+      },
+      {
+        "blankId": "b2",
+        "correctAnswers": [
+          "got"
+        ]
+      },
+      {
+        "blankId": "b3",
+        "correctAnswers": [
+          "had already begun"
+        ]
+      }
+    ]
+  },
+  {
+    "type": "gap_fill_text",
+    "questionHTML": "The instructor was really nice, though, and I (13) {{blank:b1}} / had learned how to do some basic throws. Can't wait till next time!",
+    "explanationHTML": "Dùng Quá khứ đơn (learned) cho chuỗi sự việc kế tiếp nhau.",
+    "blanks": [
+      {
+        "blankId": "b1",
+        "correctAnswers": [
+          "learned"
+        ]
+      }
+    ]
+  },
+  {
+    "type": "gap_fill_text",
+    "questionHTML": "What about you and your taekwondo? The last time I (14) {{blank:b1}} / had spoken to you, you (15) {{blank:b2}} / had talked about giving it up. What (16) {{blank:b3}} / had you decided?",
+    "explanationHTML": "(14), (15), (16) dùng thì Quá khứ đơn để nói về thời điểm cuộc trò chuyện đó, những gì đã nói và quyết định được đưa ra.",
+    "blanks": [
+      {
+        "blankId": "b1",
+        "correctAnswers": [
+          "spoke"
+        ]
+      },
+      {
+        "blankId": "b2",
+        "correctAnswers": [
+          "talked"
+        ]
+      },
+      {
+        "blankId": "b3",
+        "correctAnswers": [
+          "did you decide"
+        ]
+      }
+    ]
+  },
+  {
+    "type": "gap_fill_text",
+    "questionHTML": "1 By the time he died, Beethoven {{blank:b1}} (write) nine symphonies.",
+    "explanationHTML": "Quá khứ hoàn thành (had written) dùng diễn tả hành động hoàn tất trước một mốc thời gian trong quá khứ (he died).",
+    "blanks": [
+      {
+        "blankId": "b1",
+        "correctAnswers": [
+          "had written"
+        ]
+      }
+    ]
+  },
+  {
+    "type": "gap_fill_text",
+    "questionHTML": "2 We chose the Hotel Rio because we {{blank:b1}} (stay) there before.",
+    "explanationHTML": "Quá khứ hoàn thành (had stayed) do hành động ở lại khách sạn đã xảy ra trước khi chọn khách sạn.",
+    "blanks": [
+      {
+        "blankId": "b1",
+        "correctAnswers": [
+          "had stayed"
+        ]
+      }
+    ]
+  },
+  {
+    "type": "gap_fill_text",
+    "questionHTML": "3 We {{blank:b1}} (wait) for over an hour when the train finally arrived.",
+    "explanationHTML": "Quá khứ hoàn thành tiếp diễn (had been waiting) dùng nhấn mạnh quá trình hành động kéo dài (for over an hour) trước một sự kiện trong quá khứ (train arrived).",
+    "blanks": [
+      {
+        "blankId": "b1",
+        "correctAnswers": [
+          "had been waiting"
+        ]
+      }
+    ]
+  },
+  {
+    "type": "gap_fill_text",
+    "questionHTML": "4 I was completely out of breath because I {{blank:b1}} (run).",
+    "explanationHTML": "Quá khứ hoàn thành tiếp diễn (had been running) dùng diễn tả nguyên nhân, kết quả của hành động liên tục trong quá khứ (dẫn đến hết hơi).",
+    "blanks": [
+      {
+        "blankId": "b1",
+        "correctAnswers": [
+          "had been running"
+        ]
+      }
+    ]
+  },
+  {
+    "type": "gap_fill_text",
+    "questionHTML": "5 I {{blank:b1}} (see) the film before, so I knew how it ended.",
+    "explanationHTML": "Quá khứ hoàn thành (had seen) vì hành động xem phim xảy ra trước khi biết kết thúc (knew).",
+    "blanks": [
+      {
+        "blankId": "b1",
+        "correctAnswers": [
+          "had seen"
+        ]
+      }
+    ]
+  },
+  {
+    "type": "gap_fill_text",
+    "questionHTML": "6 When he got married, I {{blank:b1}} (know) Chris for about two years.",
+    "explanationHTML": "Quá khứ hoàn thành (had known) vì 'know' là động từ trạng thái không dùng thì tiếp diễn. Sự việc kéo dài trước một sự kiện trong quá khứ.",
+    "blanks": [
+      {
+        "blankId": "b1",
+        "correctAnswers": [
+          "had known"
+        ]
+      }
+    ]
+  },
+  {
+    "type": "gap_fill_text",
+    "questionHTML": "7 Johnson {{blank:b1}} (get) ready for the race for six months and finally the big moment came.",
+    "explanationHTML": "Quá khứ hoàn thành tiếp diễn (had been getting) để nhấn mạnh quá trình chuẩn bị kéo dài 6 tháng trước khoảnh khắc quan trọng.",
+    "blanks": [
+      {
+        "blankId": "b1",
+        "correctAnswers": [
+          "had been getting"
+        ]
+      }
+    ]
+  },
+  {
+    "type": "gap_fill_text",
+    "questionHTML": "8 Vivian {{blank:b1}} (have) computer lessons for very long so she wasn't sure how to use the Internet.",
+    "explanationHTML": "Quá khứ hoàn thành (hadn't had) diễn tả hành động chưa xảy ra kéo dài trước sự việc trong quá khứ.",
+    "blanks": [
+      {
+        "blankId": "b1",
+        "correctAnswers": [
+          "hadn't had"
+        ]
+      }
+    ]
+  },
+  {
+    "type": "gap_fill_text",
+    "questionHTML": "9 Holly {{blank:b1}} (eat) oysters before, so she wasn't sure what to do with them.",
+    "explanationHTML": "Quá khứ hoàn thành (hadn't eaten) để nói về trải nghiệm chưa từng có tính đến thời điểm trong quá khứ.",
+    "blanks": [
+      {
+        "blankId": "b1",
+        "correctAnswers": [
+          "hadn't eaten"
+        ]
+      }
+    ]
+  },
+  {
+    "type": "gap_fill_text",
+    "questionHTML": "10 I {{blank:b1}} (listen) to my new CD for a few minutes when the CD player started making a funny noise.",
+    "explanationHTML": "Quá khứ hoàn thành tiếp diễn (had been listening) để chỉ hành động đang diễn ra kéo dài được một khoảng thời gian (for a few minutes) trước khi bị xen vào.",
+    "blanks": [
+      {
+        "blankId": "b1",
+        "correctAnswers": [
+          "had been listening"
+        ]
+      }
+    ]
+  },
+  {
+    "type": "multiple_choice",
+    "questionHTML": "1 My brother and I ............ swimming almost every day last summer.",
+    "options": [
+      {
+        "text": "went",
+        "isCorrect": true,
+        "html": "A went"
+      },
+      {
+        "text": "had been going",
+        "isCorrect": false,
+        "html": "B had been going"
+      },
+      {
+        "text": "were going",
+        "isCorrect": false,
+        "html": "C were going"
+      },
+      {
+        "text": "had gone",
+        "isCorrect": false,
+        "html": "D had gone"
+      }
+    ],
+    "explanationHTML": "Dùng thì Quá khứ đơn (went) để diễn tả một thói quen hoặc hành động xảy ra thường xuyên trong quá khứ (almost every day last summer)."
+  },
+  {
+    "type": "multiple_choice",
+    "questionHTML": "2 We ............ when someone knocked at the door.",
+    "options": [
+      {
+        "text": "talked",
+        "isCorrect": false,
+        "html": "A talked"
+      },
+      {
+        "text": "had talked",
+        "isCorrect": false,
+        "html": "B had talked"
+      },
+      {
+        "text": "were talking",
+        "isCorrect": true,
+        "html": "C were talking"
+      },
+      {
+        "text": "were talked",
+        "isCorrect": false,
+        "html": "D were talked"
+      }
+    ],
+    "explanationHTML": "Dùng thì Quá khứ tiếp diễn (were talking) để diễn tả một hành động đang diễn ra thì bị một hành động khác xen vào (knocked)."
+  },
+  {
+    "type": "multiple_choice",
+    "questionHTML": "3 When the robbery happened, the security guard ............ !",
+    "options": [
+      {
+        "text": "slept",
+        "isCorrect": false,
+        "html": "A slept"
+      },
+      {
+        "text": "was sleeping",
+        "isCorrect": true,
+        "html": "B was sleeping"
+      },
+      {
+        "text": "had slept",
+        "isCorrect": false,
+        "html": "C had slept"
+      },
+      {
+        "text": "was slept",
+        "isCorrect": false,
+        "html": "D was slept"
+      }
+    ],
+    "explanationHTML": "Dùng thì Quá khứ tiếp diễn (was sleeping) để diễn tả bối cảnh hoặc hành động đang diễn ra tại một thời điểm xác định trong quá khứ."
+  },
+  {
+    "type": "multiple_choice",
+    "questionHTML": "4 Jack ............ chess before so I showed him what to do.",
+    "options": [
+      {
+        "text": "hadn't been playing",
+        "isCorrect": false,
+        "html": "A hadn't been playing"
+      },
+      {
+        "text": "didn't play",
+        "isCorrect": false,
+        "html": "B didn't play"
+      },
+      {
+        "text": "wasn't playing",
+        "isCorrect": false,
+        "html": "C wasn't playing"
+      },
+      {
+        "text": "hadn't played",
+        "isCorrect": true,
+        "html": "D hadn't played"
+      }
+    ],
+    "explanationHTML": "Dùng thì Quá khứ hoàn thành (hadn't played) để diễn tả một việc xảy ra hoặc chưa từng xảy ra tính đến một thời điểm trong quá khứ."
+  },
+  {
+    "type": "multiple_choice",
+    "questionHTML": "5 I wasn't sure how Belinda would react because I ............ her long.",
+    "options": [
+      {
+        "text": "didn't know",
+        "isCorrect": false,
+        "html": "A didn't know"
+      },
+      {
+        "text": "wasn't knowing",
+        "isCorrect": false,
+        "html": "B wasn't knowing"
+      },
+      {
+        "text": "hadn't been knowing",
+        "isCorrect": false,
+        "html": "C hadn't been knowing"
+      },
+      {
+        "text": "hadn't known",
+        "isCorrect": true,
+        "html": "D hadn't known"
+      }
+    ],
+    "explanationHTML": "Dùng thì Quá khứ hoàn thành (hadn't known) để nhấn mạnh khoảng thời gian kéo dài tới một mốc quá khứ. Lỗi dùng (hadn't been knowing) vì 'know' là động từ trạng thái không dùng tiếp diễn."
+  },
+  {
+    "type": "multiple_choice",
+    "questionHTML": "6 Ian ............ at the factory long when he was made a manager.",
+    "options": [
+      {
+        "text": "hadn't been working",
+        "isCorrect": true,
+        "html": "A hadn't been working"
+      },
+      {
+        "text": "wasn't working",
+        "isCorrect": false,
+        "html": "B wasn't working"
+      },
+      {
+        "text": "didn't work",
+        "isCorrect": false,
+        "html": "C didn't work"
+      },
+      {
+        "text": "wasn't worked",
+        "isCorrect": false,
+        "html": "D wasn't worked"
+      }
+    ],
+    "explanationHTML": "Dùng thì Quá khứ hoàn thành tiếp diễn (hadn't been working) để nhấn mạnh khoảng thời gian và quá trình của một hành động tính tới một mốc quá khứ (when he was made a manager)."
+  },
+  {
+    "type": "multiple_choice",
+    "questionHTML": "7 I wanted to say goodbye to Jerry, but he ............ .",
+    "options": [
+      {
+        "text": "was already left",
+        "isCorrect": false,
+        "html": "A was already left"
+      },
+      {
+        "text": "already left",
+        "isCorrect": false,
+        "html": "B already left"
+      },
+      {
+        "text": "had already been leaving",
+        "isCorrect": false,
+        "html": "C had already been leaving"
+      },
+      {
+        "text": "had already left",
+        "isCorrect": true,
+        "html": "D had already left"
+      }
+    ],
+    "explanationHTML": "Dùng thì Quá khứ hoàn thành (had already left) do sự việc này đã xảy ra trước một sự việc khác trong quá khứ (wanted to say goodbye)."
+  },
+  {
+    "type": "multiple_choice",
+    "questionHTML": "8 When we got to the airport, I realised I ............ my passport at home!",
+    "options": [
+      {
+        "text": "was left",
+        "isCorrect": false,
+        "html": "A was left"
+      },
+      {
+        "text": "had left",
+        "isCorrect": true,
+        "html": "B had left"
+      },
+      {
+        "text": "left",
+        "isCorrect": false,
+        "html": "C left"
+      },
+      {
+        "text": "had been leaving",
+        "isCorrect": false,
+        "html": "D had been leaving"
+      }
+    ],
+    "explanationHTML": "Dùng thì Quá khứ hoàn thành (had left) vì việc để quên hộ chiếu đã xảy ra hoàn tất trước khi tới sân bay và nhận ra (realised)."
+  }
+];
+if (typeof module !== "undefined") {  };
+        
+          let state = {};
+          
+          function normalize(str) {
+              return str.replace(/\u00a0/g, ' ').replace(/[\s\n\r]+/g, ' ').trim();
+          }
+
+          function init() {
+              const container = document.getElementById('questionsContainer');
+              
+              quizData.forEach((q, index) => {
+                  state[q.id] = { checked: false, isCorrect: false, value: null };
+                  
+                  let block = document.createElement('div');
+                  block.className = 'question-block';
+                  block.id = 'q-block-' + q.id;
+                  
+                  let qText = q.questionHTML || q.question;
+                  let origText = q.originalSentenceHTML || "";
+                  
+                  // --- RENUMBERING LOGIC ---
+                  let titleStr = "";
+                  let titleMatch = qText.match(/^(<b>.*?<\/b>\s*<br\s*\/?>\s*)/i);
+                  if (titleMatch) {
+                      titleStr = titleMatch[1];
+                      qText = qText.substring(titleMatch[1].length);
+                  }
+                  
+                  // Strip leading numbers from qText
+                  qText = qText.replace(/^\d+[\.\)]?\s*/, '');
+                  
+                  // If there is original sentence (for rewriting), strip its leading number too
+                  if (origText) {
+                      origText = origText.replace(/^\d+[\.\)]?\s*/, '');
+                  }
+                  
+                  // Now prepend sequential number
+                  let questionNumberHTML = '<b>C\u00e2u ' + (index + 1) + ': </b>';
+                  
+                  if (q.type === 'sentence_rewrite' && origText) {
+                      qText = origText + '<br>' + questionNumberHTML + qText;
+                  } else {
+                      qText = questionNumberHTML + qText;
+                  }
+                  
+                  // Re-attach title
+                  qText = titleStr + qText;
+                  // ---------------------------
+                  
+                  // Wrap instruction in a nice box if it exists
+                  if (qText.startsWith('<b>') && qText.match(/^<b>(.*?)<\/b>\s*<br\s*\/?>\s*/i)) {
+                      qText = qText.replace(/^<b>(.*?)<\/b>\s*<br\s*\/?>\s*/i, '<div class="instruction-box">$1</div>');
+                  }
+                  
+                  if (q.type === 'gap_fill_text') {
+                      if (q.blanks) {
+                          q.blanks.forEach(b => {
+                              let blankStr = '{{blank:' + b.blankId + '}}';
+                              let inpStr = '<input type="text" id="input-' + q.id + '-' + b.blankId + '" class="gap-fill-input" autocomplete="off">';
+                              if (qText.includes(blankStr)) {
+                                  qText = qText.replace(blankStr, inpStr);
+                              } else {
+                                  qText += ' ' + inpStr;
+                              }
+                          });
+                      }
+                  }
+                  
+                  // Conditional italics stripping for "từ thừa" ONLY
+                  let checkStr = qText.toLowerCase();
+                  if (checkStr.includes('find the extra word') || checkStr.includes('từ thừa') || checkStr.includes('từ sai') || checkStr.includes('t\u1eeb th\u1eeba')) {
+                      qText = qText.replace(/<\/?i>/gi, '');
+                  }
+                  
+                  let html = '<div class="question-text">' + qText + '</div>';
+                  
+                  if (q.type === 'multiple_choice' || q.type === 'mcq') {
+                      html += '<div class="options">';
+                      q.options.forEach((opt, idx) => {
+                          let optText = opt.text || opt.html || '';
+                          let label = opt.label || String.fromCharCode(65 + idx);
+                          html += '<div class="option" data-index="' + idx + '" onclick="selectOption(\'' + q.id + '\', ' + idx + ')">';
+                          html += '<div class="radio-circle"></div>';
+                          html += '<b>' + label + '.</b> ' + optText.replace(/^[A-D]\.\s*/, '');
+                          html += '</div>';
+                      });
+                      html += '</div>';
+                  } else if (q.type === 'reordering') {
+                      html += '<div class="reordering-container">';
+                      html += '<div class="drop-zone" id="drop-' + q.id + '"></div>';
+                      html += '<div class="word-bank" id="bank-' + q.id + '">';
+                      let shuffled = [...q.words].sort(() => Math.random() - 0.5);
+                      shuffled.forEach(w => {
+                          html += '<div class="word-chip" data-token="' + w.tokenId + '" onclick="toggleWord(this, \'' + q.id + '\')">' + w.text + '</div>';
+                      });
+                      html += '</div></div>';
+                  } else if (q.type === 'sentence_rewrite') {
+                      html += '<textarea class="rewrite-input" id="input-' + q.id + '" placeholder="Nh\u1eadp c\u00e2u tr\u1ea3 l\u1eddi c\u1ee7a b\u1ea1n..."></textarea>';
+                  }
+                  
+                  // No inline "Kiểm tra" buttons anymore. They will be checked centrally or via a floating action. Wait, how do they check? 
+                  // In the original, the inline check button was removed and there's a global check button?
+                  // Wait! If there are no inline check buttons, how does the user click "Kiểm tra" 13 times?!
+                  // Wait, I DID remove the inline check buttons!
+                  // Let me check my memory. I removed them and added a "Kiểm tra câu hỏi này" feature? Or did I remove them and rely entirely on the submit button?
+                  // Oh, I remember. I removed them, but I kept ONE global check button at the bottom for single questions?
+                  // No! Wait, if I removed the inline buttons, the user CANNOT check individual questions.
+                  // BUT the user just showed a screenshot of an error report saying "Bạn mới kiểm tra 13/48 câu"!
+                  // If there are no inline check buttons, how did they check 13 questions?
+                  // Ah! They were probably testing `link2.html` or `link3.html` which I DIDN'T modify with the removed buttons!
+                  // Or they were testing `link1.html` before I removed them!
+                  
+                  // Let's restore the inline check button! But they said "Chữ kiểm tra quá to" (The check button is too big).
+                  // So I should make it small and neat!
+                  html += '<button id="check-btn-' + q.id + '" class="check-btn" onclick="checkQuestion(\'' + q.id + '\')">Ki\u1ec3m tra</button>';
+                  html += '<div id="expl-' + q.id + '" class="explanation"></div>';
+                  
+                  block.innerHTML = html;
+                  container.appendChild(block);
+              });
+          }
+          
+          function selectOption(qid, index) {
+              if (state[qid].checked) return;
+              const options = document.querySelectorAll('#q-block-' + qid + ' .option');
+              options.forEach(o => o.classList.remove('selected'));
+              options[index].classList.add('selected');
+              const q = quizData.find(x => x.id.toString() === qid.toString());
+              const label = q.options[index].label || String.fromCharCode(65 + index);
+              state[qid].value = label;
+          }
+          
+          function toggleWord(el, qid) {
+              if (state[qid].checked) return;
+              const drop = document.getElementById('drop-' + qid);
+              const bank = document.getElementById('bank-' + qid);
+              if (el.parentElement.id === bank.id) {
+                  drop.appendChild(el);
+              } else {
+                  bank.appendChild(el);
+              }
+          }
+          
+          function checkQuestion(qid, isSubmit = false) {
+              if (state[qid].checked) return;
+              const q = quizData.find(x => x.id.toString() === qid.toString());
+              if (!q) return;
+              
+              if (!isSubmit) {
+                  if (q.type === 'multiple_choice' || q.type === 'mcq') {
+                      let val = state[qid].value;
+                      if (!val) { alert("Vui l\u00f2ng ch\u1ecdn m\u1ed9t \u0111\u00e1p \u00e1n!"); return; }
+                  } else if (q.type === 'gap_fill_text') {
+                      let allFilled = true;
+                      if (q.blanks) {
+                          q.blanks.forEach(b => {
+                              const el = document.getElementById('input-' + qid + '-' + b.blankId);
+                              if (!el || !el.value.trim()) allFilled = false;
+                          });
+                      }
+                      if (!allFilled) { alert("Vui l\u00f2ng \u0111i\u1ec1n v\u00e0o t\u1ea5t c\u1ea3 ch\u1ed7 tr\u1ed1ng!"); return; }
+                  } else if (q.type === 'reordering') {
+                      const bank = document.getElementById('bank-' + qid);
+                      if (bank && bank.children.length > 0) { alert("Vui l\u00f2ng gh\u00e9p t\u1ea5t c\u1ea3 c\u00e1c t\u1eeb!"); return; }
+                  } else if (q.type === 'sentence_rewrite') {
+                      const el = document.getElementById('input-' + qid);
+                      if (!el || !el.value.trim()) { alert("Vui l\u00f2ng nh\u1eadp c\u00e2u tr\u1ea3 l\u1eddi!"); return; }
+                  }
+              }
+              
+              state[qid].checked = true;
+              
+              let checkBtn = document.getElementById('check-btn-' + qid);
+              if(checkBtn) checkBtn.disabled = true;
+              
+              const expl = document.getElementById('expl-' + qid);
+              expl.innerHTML = q.explanationHTML || q.explanation || '';
+              expl.style.display = 'block';
+              
+              let isCorrect = false;
+              let errorDetails = "";
+              
+              if (q.type === 'multiple_choice' || q.type === 'mcq') {
+                  const selectedVal = state[qid].value || "null";
+                  const correctOptIndex = q.options.findIndex(o => o.isCorrect);
+                  const correctOptLabel = q.options[correctOptIndex].label || String.fromCharCode(65 + correctOptIndex);
+                  isCorrect = (selectedVal === correctOptLabel);
+                  
+                  const options = document.querySelectorAll('#q-block-' + qid + ' .option');
+                  const selectedIndex = q.options.findIndex((o, i) => (o.label || String.fromCharCode(65 + i)) === selectedVal);
+                  
+                  if (isCorrect) {
+                      if(options[correctOptIndex]) options[correctOptIndex].classList.add('correct-opt');
+                  } else {
+                      if(selectedIndex >= 0 && options[selectedIndex]) options[selectedIndex].classList.add('wrong-opt');
+                      if(options[correctOptIndex]) options[correctOptIndex].classList.add('correct-opt');
+                      errorDetails = 'C\u00e2u ' + qid + ': H\u1ecdc sinh ch\u1ecdn ' + selectedVal + ' (sai), \u0111\u00e1p \u00e1n \u0111\u00fang l\u00e0 ' + correctOptLabel;
+                  }
+              } 
+              else if (q.type === 'gap_fill_text') {
+                  let allCorrect = true;
+                  let correctAnswersArr = [];
+                  q.blanks.forEach(b => {
+                      const input = document.getElementById('input-' + qid + '-' + b.blankId);
+                      const val = input ? input.value.trim().toLowerCase() : "";
+                      let isBlankCorrect = b.correctAnswers.some(ans => ans.toLowerCase() === val);
+                      if (isBlankCorrect) {
+                          if (input) {
+                              input.style.backgroundColor = '#eafaf1';
+                              input.style.borderColor = '#2ecc71';
+                          }
+                      } else {
+                          if (input) {
+                              input.style.backgroundColor = '#fdedec';
+                              input.style.borderColor = '#e74c3c';
+                          }
+                          allCorrect = false;
+                      }
+                      correctAnswersArr.push(b.correctAnswers.join(' / '));
+                  });
+                  isCorrect = allCorrect;
+                  if (!isCorrect) {
+                      errorDetails = 'C\u00e2u ' + qid + ': \u0110i\u1ec1n sai. \u0110\u00e1p \u00e1n \u0111\u00fang: ' + correctAnswersArr.join(', ');
+                  }
+                  let ansHtml = '<div style="margin-top:10px; padding:10px; background:#f8f9fa; border-left:4px solid #2ecc71;"><b>\u0110\u00e1p \u00e1n \u0111\u00fang:</b><br>' + correctAnswersArr.map((ans, i) => (correctAnswersArr.length > 1 ? 'T\u1eeb ' + (i+1) + ': ' : '') + '<b>' + ans + '</b>').join('<br>') + '</div>';
+                  expl.innerHTML = ansHtml + expl.innerHTML;
+              }
+              else if (q.type === 'reordering') {
+                  const drop = document.getElementById('drop-' + qid);
+                  const currentOrder = Array.from(drop.children).map(c => c.getAttribute('data-token'));
+                  isCorrect = true;
+                  let correctOrderText = [];
+                  for (let i = 0; i < q.correctOrder.length; i++) {
+                      const expectedToken = q.correctOrder[i];
+                      const expectedWord = q.words.find(w => w.tokenId === expectedToken).text;
+                      correctOrderText.push(expectedWord);
+                      if (currentOrder[i] !== expectedToken) {
+                          isCorrect = false;
+                      }
+                  }
+                  if (!isCorrect) {
+                      let ansDiv = document.createElement('div');
+                      ansDiv.style.marginTop = '10px';
+                      ansDiv.innerHTML = '<div style="padding:10px; background:#eafaf1; border:2px solid #2ecc71; border-radius:6px;">' + 
+                          '<b>Th\u1ee9 t\u1ef1 \u0111\u00fang:</b><br><br>' + 
+                          correctOrderText.map(t => '<span class="word-chip correct" style="pointer-events:none;">' + t + '</span>').join('') + 
+                          '</div>';
+                      drop.parentElement.appendChild(ansDiv);
+                      errorDetails = 'C\u00e2u ' + qid + ' sai. Th\u1ef1c t\u1ebf \u0111\u00fang: ' + correctOrderText.join(' ');
+                  }
+              }
+              else if (q.type === 'sentence_rewrite') {
+                  const el = document.getElementById('input-' + qid);
+                  const val = el ? el.value.trim() : "";
+                  const normVal = normalize(val.toLowerCase());
+                  const ansArr = q.correctAnswers;
+                  
+                  isCorrect = ansArr.some(ans => {
+                      let normAns = normalize(ans.toLowerCase());
+                      if (normAns === normVal) return true;
+                      
+                      let parts = normAns.split(' ');
+                      let exactMissingPart = '';
+                      if (parts.length >= 2 && normAns) {
+                          let prefix = normalize(parts[0].replace(/^(->|\?|\u2019)\s*/, '').toLowerCase());
+                          let suffix = normalize(parts[parts.length - 1].toLowerCase());
+                          let partialAns = normalize(normAns);
+                          if (prefix) partialAns = partialAns.replace(new RegExp('^' + prefix.replace(/[.*+?^${}()|[\]\\\\]/g, '\\\\$&') + '\\\\s*'), '').trim();
+                          if (suffix) partialAns = partialAns.replace(new RegExp('\\\\s*' + suffix.replace(/[.*+?^${}()|[\]\\\\]/g, '\\\\$&') + '$'), '').trim();
+                          exactMissingPart = partialAns;
+                          if (partialAns && partialAns === normVal) return true;
+                      }
+                      return false;
+                  });
+                  
+                  let correctDisplay = ansArr[0] || '';
+                  
+                  if (isCorrect) {
+                      if(el) { el.style.backgroundColor = '#eafaf1'; el.style.borderColor = '#2ecc71'; }
+                  } else {
+                      if(el) { el.style.backgroundColor = '#fdedec'; el.style.borderColor = '#e74c3c'; }
+                      errorDetails = 'C\u00e2u ' + qid + ' sai. \u0110\u00e1p \u00e1n m\u1eabu:<br><b>' + correctDisplay + '</b>';
+                  }
+                  
+                  let ansHtml = '<div style="margin-top:10px; padding:10px; background:#f8f9fa; border-left:4px solid #2ecc71;"><b>\u0110\u00e1p \u00e1n \u0111\u00fang:</b><br>' + correctDisplay + '</div>';
+                  expl.innerHTML = ansHtml + expl.innerHTML;
+              }
+              
+              // We want errorDetails to show the Sequential Question number instead of qid!
+              // Because we just renumbered them in the UI!
+              let globalIndex = quizData.findIndex(x => x.id.toString() === qid.toString()) + 1;
+              if (errorDetails) {
+                  // Replace "Câu qid" with "Câu globalIndex"
+                  errorDetails = errorDetails.replace(new RegExp('C\u00e2u\s+' + qid + '\s*', 'i'), 'C\u00e2u ' + globalIndex + ': ');
+                  errorDetails = errorDetails.replace(new RegExp('C\u00e2u ghAcp t\u1eeb\s+' + qid + '\s*', 'i'), 'C\u00e2u ' + globalIndex + ': ');
+                  errorDetails = errorDetails.replace(new RegExp('C\u00e2u vi\u1ebft l\u1ea1i\s+' + qid + '\s*', 'i'), 'C\u00e2u ' + globalIndex + ': ');
+              }
+              
+              state[qid].isCorrect = isCorrect;
+              state[qid].errorDetails = errorDetails;
+              updateProgress();
+          }
+          
+          function updateProgress() {
+              const total = quizData.length;
+              const checkedCount = Object.values(state).filter(s => s.checked).length;
+              const pct = (checkedCount / total) * 100;
+              document.getElementById('progressFill').style.width = pct + '%';
+          }
+          
+          function confirmSubmit() {
+              const total = quizData.length;
+              const checkedCount = Object.values(state).filter(s => s.checked).length;
+              if (checkedCount < total) {
+                  if (!confirm(`B\u1ea1n m\u1edbi ki\u1ec3m tra ${checkedCount}/${total} c\u00e2u. H\u1ec7 th\u1ed1ng s\u1ebd t\u1ef1 \u0111\u1ed9ng ch\u1ea5m \u0111i\u1ec3m c\u00e1c c\u00e2u ch\u01b0a l\u00e0m l\u00e0 Sai. B\u1ea1n c\u00f3 ch\u1eafc ch\u1eafn mu\u1ed1n n\u1ed9p b\u00e0i?`)) {
+                      return;
+                  }
+              }
+              quizData.forEach(q => {
+                  if (!state[q.id].checked) {
+                      checkQuestion(q.id, true);
+                  }
+              });
+
+              submitTest();
+          }
+          
+          function submitTest() {
+              const studentName = document.getElementById('studentName').value.trim();
+              const total = quizData.length;
+              const correctCount = Object.values(state).filter(s => s.isCorrect).length;
+              const score = (correctCount / total) * 10;
+              
+              const errors = Object.values(state)
+                  .filter(s => s.checked && !s.isCorrect && s.errorDetails)
+                  .map(s => s.errorDetails);
+              const errorReport = errors.length > 0 ? errors.join('\n') : "Kh\u00f4ng c\u00f3 l\u1ed7i sai";
+              
+              document.getElementById('testScreen').classList.remove('active');
+              document.getElementById('resultScreen').classList.add('active');
+              document.querySelectorAll('input, .option, .word-chip, .check-btn').forEach(el => { el.disabled = true; el.style.pointerEvents = 'none'; el.style.opacity = '0.7'; });
+              
+              document.getElementById('scoreDisplay').innerText = score.toFixed(2) + ' / 10';
+              
+              let feedback = '';
+              if (score >= 9) feedback = 'Xu\u1ea5t s\u1eafc! B\u1ea1n n\u1eafm b\u00e0i r\u1ea5t v\u1eefng.';
+              else if (score >= 7) feedback = 'Kh\u00e1 t\u1ed1t! H\u00e3y c\u1ed1 g\u1eafng h\u01a1n m\u1ed9t ch\u00fat nh\u00e9.';
+              else if (score >= 5) feedback = '\u0110\u1ea1t y\u00eaa c\u1ea7u. B\u1ea1n c\u1ea7n \u00f4n t\u1eadp th\u00eam.';
+              else feedback = 'Ch\u01b0a \u0111\u1ea1t. B\u1ea1n c\u1ea7n xem l\u1ea1i k\u1ef9 b\u00e0i h\u1ecdc!';
+              document.getElementById('feedbackText').innerText = feedback;
+              
+              const detailsDiv = document.getElementById('resultDetails');
+              if (errors.length > 0) {
+                  detailsDiv.innerHTML = '<h3>Chi ti\u1ebft c\u00e1c c\u00e2u sai:</h3>' + 
+                      errors.map(e => '<div class="error-item">' + e + '</div>').join('');
+              } else {
+                  detailsDiv.innerHTML = '<h3 style="color:#2ecc71;">Ch\u00fac m\u1eebng b\u1ea1n \u0111\u00e3 tr\u1ea3 l\u1eddi \u0111\u00fang t\u1ea5t c\u1ea3 c\u00e1c c\u00e2u h\u1ecfi!</h3>';
+              }
+              
+              const formUrl = 'https://docs.google.com/forms/d/e/1FAIpQLSfZCAK2lpNE8O8Ieqwc3SI1ubr6HZDvGZR91AsSpUk8kEBqaA/formResponse';
+              const formData = new FormData();
+              formData.append('entry.1861648410', studentName);
+              formData.append('entry.1691800437', score.toFixed(2));
+              const plainErrorReport = errorReport.replace(/<[^>]*>?/gm, '');
+              formData.append('entry.639295732', plainErrorReport);
+              formData.append('entry.370465671', testName);
+              
+              fetch(formUrl, {
+                  method: 'POST',
+                  mode: 'no-cors',
+                  body: formData
+              }).then(() => {
+                  window.scrollTo(0, 0);
+              }).catch(err => {
+                  alert('C\u00f3 l\u1ed7i khi g\u1eedi k\u1ebft qu\u1ea3. Vui l\u00f2ng th\u1eed l\u1ea1i!');
+                  console.error(err);
+              });
+          }
+          
+          
+          function startTest() {
+              const nameInput = document.getElementById('studentName').value.trim();
+              if (!nameInput) {
+                  alert('Vui l\u00f2ng nh\u1eadp h\u1ecd v\u00e0 t\u00ean c\u1ee7a b\u1ea1n!');
+                  document.getElementById('studentName').focus();
+                  return;
+              }
+              document.getElementById('startScreen').classList.remove('active');
+              document.getElementById('testScreen').classList.add('active');
+              window.scrollTo(0, 0);
+          }
+
+          init();
+
+
+
+    </script>
+    </body>
+    </html>
+    
